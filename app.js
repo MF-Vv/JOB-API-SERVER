@@ -7,6 +7,11 @@ const helmet = require("helmet")
 const xss = require("xss-clean")
 const rateLimiter = require("express-rate-limit")
 
+// Swagger
+const swaggerUI = require("swagger-ui-express")
+const YAML = require("yamljs")
+const swaggerDocs = YAML.load("./docs.yaml")
+
 const express = require("express")
 const app = express()
 
@@ -39,6 +44,7 @@ app.use(helmet())
 app.use(xss())
 
 // Route
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/jobs", authMiddleware, jobsRouter)
 app.use(notFoundMiddleware)
